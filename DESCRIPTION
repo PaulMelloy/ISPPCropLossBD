@@ -1,0 +1,29 @@
+Package: ISPPCropLossDB
+Title: Collaborative Crop Loss Database (Prototype Shiny Application)
+Version: 0.0.0.9000
+Authors@R:
+    person("Paul", "Melloy", role = c("aut", "cre"),
+           email = "paul.melloy@csiro.au",
+             comment = c(ORCID = "0000-0003-4253-7167"))
+Description: Prototype web application for the International Society for
+    Plant Pathology Crop Loss Subcommittee database. Researchers sign in
+    with ORCID, submit and edit crop loss observations, and every change
+    is recorded in a PostgreSQL audit trail.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Depends:
+    R (>= 4.1.0)
+Imports:
+    bslib (>= 0.6.0),
+    DBI,
+    DT,
+    htmltools,
+    httr2,
+    jsonlite,
+    openssl,
+    pool,
+    RPostgres,
+    shiny (>= 1.8.0)
+Suggests:
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

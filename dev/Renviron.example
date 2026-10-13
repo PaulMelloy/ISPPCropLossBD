@@ -1,0 +1,21 @@
+# Copy to .Renviron in the project root (dev) or the app directory (server).
+# Never commit the real file.
+
+CROPLOSS_DB_HOST=localhost
+CROPLOSS_DB_PORT=5432
+CROPLOSS_DB_NAME=croploss
+CROPLOSS_DB_USER=croploss_app
+CROPLOSS_DB_PASSWORD=app_dev_password
+
+# ORCID: "sandbox" while testing, "production" for the live demo
+ORCID_ENV=sandbox
+ORCID_CLIENT_ID=APP-XXXXXXXXXXXXXXXX
+ORCID_CLIENT_SECRET=xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx
+ORCID_REDIRECT_URI=https://croploss.example.org/
+
+# Long random string used to sign the OAuth state. Generate with:
+#   Rscript -e 'cat(openssl::rand_bytes(32) |> as.character() |> paste(collapse = ""))'
+CROPLOSS_STATE_SECRET=change-me
+
+# DEVELOPMENT ONLY: skip ORCID and sign in as this iD. Never set on a server.
+# CROPLOSS_DEV_AUTH=0000-0002-1825-0097

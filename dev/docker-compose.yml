@@ -1,0 +1,14 @@
+# Local PostgreSQL for development:  docker compose -f dev/docker-compose.yml up -d
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: croploss
+      POSTGRES_USER: croploss_owner
+      POSTGRES_PASSWORD: owner_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - croploss_pgdata:/var/lib/postgresql/data
+volumes:
+  croploss_pgdata:

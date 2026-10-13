@@ -1,0 +1,7 @@
+^dev$
+^deploy$
+^docs$
+^\.Renviron.*$
+^.*\.Rproj$
+^\.Rproj\.user$
+^ISPPCropLossDB\.Rproj$
