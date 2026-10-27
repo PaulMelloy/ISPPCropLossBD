@@ -11,7 +11,7 @@ entry_form_inputs <- function(ns, lookups, studies = character(), values = NULL,
     shiny::selectInput(ns(id), label, choices = c("(none)" = "", choices),
                        selected = as.character(v(id) %||% ""))
   }
-  grid <- function(...) bslib::layout_column_wrap(width = 1 / 3, ...)
+  grid <- function(...) bslib::layout_column_wrap(width = 1 / 4, ...)
 
   shiny::tagList(
     shiny::h5("Host and agent"),
@@ -21,6 +21,9 @@ entry_form_inputs <- function(ns, lookups, studies = character(), values = NULL,
       txt("pathogen_common_name", "Common name / description", placeholder = "Fusarium head blight"),
       sel("agent_group", "Agent group", lookups$agent_group)
     ),
+    br(),
+    br(),
+    br(),
     shiny::h5("Where and when"),
     grid(
       num("year", "Year of observation *", min = 1800, step = 1),
@@ -28,22 +31,35 @@ entry_form_inputs <- function(ns, lookups, studies = character(), values = NULL,
       num("latitude", "Latitude (decimal)", step = 0.0001),
       num("longitude", "Longitude (decimal)", step = 0.0001)
     ),
+    br(),
+    br(),
+    br(),
     shiny::h5("Disease"),
     grid(
       num("disease_inc", "Incidence (proportion 0-1)", min = 0, max = 1, step = 0.01),
       num("disease_inc_var", "Incidence variation", min = 0, step = 0.01),
       num("disease_sev", "Severity", step = 0.01),
       num("disease_sev_var", "Severity variation", min = 0, step = 0.01),
+      br(),
+      br(),
       sel("severity_unit", "Severity units", lookups$severity_unit)
     ),
+    br(),
+    br(),
+    br(),
     shiny::h5("Yield (t/ha)"),
     grid(
       num("yield", "Observed yield *", min = 0, step = 0.01),
       num("yield_var", "Observed yield variation", min = 0, step = 0.01),
       num("yield_attainable", "Attainable yield *", min = 0, step = 0.01),
       num("yield_attainable_var", "Attainable yield variation", min = 0, step = 0.01),
+      br(),
+      br(),
       num("yield_loss_var", "Yield loss variation", min = 0, step = 0.01)
     ),
+    br(),
+    br(),
+    br(),
     shiny::p(class = "text-muted small",
              "Yield loss is calculated automatically as attainable minus observed yield."),
     shiny::h5("Method and source"),
@@ -52,6 +68,7 @@ entry_form_inputs <- function(ns, lookups, studies = character(), values = NULL,
       sel("group_id", "Study / trial", studies),
       txt("pub_ref", "Publication (DOI or citation)")
     ),
+    br(),
     shiny::textAreaInput(ns("search_string"), "Search string (if from a meta-analysis)",
                          value = v("search_string") %||% "", width = "100%", rows = 2),
     shiny::textAreaInput(ns("meta_data"), "Additional notes (cultivar, treatments, units...)",
