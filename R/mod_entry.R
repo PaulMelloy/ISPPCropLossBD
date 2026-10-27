@@ -15,8 +15,10 @@ mod_entry_server <- function(id, pool, user, refresh, lookups) {
         )))
       }
       bslib::card(
+        fill = FALSE,
         bslib::card_header("New crop loss observation"),
         bslib::card_body(
+          fillable = FALSE,
           entry_form_inputs(ns, lookups, studies = list_studies(pool)),
           shiny::actionButton(ns("submit"), "Submit observation", class = "btn-primary")
         )

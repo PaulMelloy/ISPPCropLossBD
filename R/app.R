@@ -2,6 +2,10 @@ app_ui <- function(request) {
   bslib::page_navbar(
     title = "Crop Loss Database (prototype)",
     theme = bslib::bs_theme(version = 5, preset = "flatly"),
+    # Only Browse stretches to the window; the entry form is taller than the
+    # window and must scroll, not squash and overlap its own inputs.
+    fillable = "Browse",
+    header = selectize_deps(),
     bslib::nav_panel("Browse", mod_browse_ui("browse")),
     bslib::nav_panel("Add observation", mod_entry_ui("entry")),
     bslib::nav_panel("About", about_ui()),
@@ -32,4 +36,16 @@ about_ui <- function() {
     shiny::p(class = "text-muted",
              "This is a prototype for discussion. Data entered here may be reset.")
   ))
+}
+
+# selectInput()s are created inside renderUI(), so Shiny would load selectize
+# and its accessibility plugin after the page. The plugin can arrive after
+# selectize initialises ("Unable to find selectize-plugin-a11y"), which aborts
+# binding of every input after it, including the submit button. Loading the
+# dependencies with the page avoids that race.
+selectize_deps <- function() {
+  htmltools::attachDependencies(
+    htmltools::tags$span(),
+    htmltools::findDependencies(shiny::selectInput("deps", NULL, character()))
+  )
 }
