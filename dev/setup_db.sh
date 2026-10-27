@@ -7,6 +7,12 @@ set -euo pipefail
 : "${APP_PASSWORD:?Set APP_PASSWORD for the croploss_app role}"
 SQL_DIR="$(cd "$(dirname "$0")/../inst/sql" && pwd)"
 
+if [[ "$(psql "$OWNER_URL" -Atc "SELECT to_regclass('croploss.app_user') IS NOT NULL")" == "t" ]]; then
+  echo "Database already set up (croploss.app_user exists); nothing to do." >&2
+  echo "To rebuild from scratch run: bash dev/reset_dev.sh" >&2
+  exit 0
+fi
+
 psql "$OWNER_URL" -v ON_ERROR_STOP=1 -f "$SQL_DIR/001_schema.sql"
 psql "$OWNER_URL" -v ON_ERROR_STOP=1 -f "$SQL_DIR/002_audit.sql"
 psql "$OWNER_URL" -v ON_ERROR_STOP=1 -v app_password="$APP_PASSWORD" -f "$SQL_DIR/003_roles.sql"

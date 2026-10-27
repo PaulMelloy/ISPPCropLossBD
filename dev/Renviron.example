@@ -1,6 +1,10 @@
 # Copy to .Renviron in the project root (dev) or the app directory (server).
 # Never commit the real file.
 
+# Project-local R library created by packages_dependancies.sh. Relative to the
+# project root, so start R from there.
+R_LIBS=r-lib
+
 CROPLOSS_DB_HOST=localhost
 CROPLOSS_DB_PORT=5432
 CROPLOSS_DB_NAME=croploss
@@ -18,4 +22,4 @@ ORCID_REDIRECT_URI=https://croploss.example.org/
 CROPLOSS_STATE_SECRET=change-me
 
 # DEVELOPMENT ONLY: skip ORCID and sign in as this iD. Never set on a server.
-# CROPLOSS_DEV_AUTH=0000-0002-1825-0097
+CROPLOSS_DEV_AUTH=0000-0003-4253-7167
