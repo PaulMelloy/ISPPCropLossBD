@@ -3,3 +3,6 @@
 .RData
 .Rproj.user/
 .Rproj.user
+
+# Project-local R library (see packages_dependancies.sh)
+r-lib/
