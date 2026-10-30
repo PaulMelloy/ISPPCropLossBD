@@ -8,6 +8,10 @@
 # The `state` value is signed with CROPLOSS_STATE_SECRET and time-limited, so
 # it can be verified after the redirect without server-side storage.
 
+orcid_enabled <- function() {
+  nzchar(Sys.getenv("ORCID_CLIENT_ID")) && nzchar(Sys.getenv("ORCID_CLIENT_SECRET"))
+}
+
 orcid_state_new <- function(secret = cfg("CROPLOSS_STATE_SECRET"),
                             now = Sys.time()) {
   ts <- as.character(as.integer(now))
@@ -68,7 +72,7 @@ auth_server <- function(input, output, session, pool) {
 
   shiny::observeEvent(session$clientData$url_search, {
     q <- shiny::parseQueryString(session$clientData$url_search)
-    if (is.null(q$code) || !is.null(user())) return()
+    if (is.null(q$code) || !is.null(user()) || !orcid_enabled()) return()
     shiny::updateQueryString("?", mode = "replace", session = session)
 
     if (!orcid_state_valid(q$state)) {
@@ -84,12 +88,22 @@ auth_server <- function(input, output, session, pool) {
     if (!is.null(info)) user(upsert_user(pool, info$orcid, info$name))
   }, once = TRUE)
 
+  if (password_login_enabled()) admin_login_server(input, session, pool, user)
+
   output$auth_ui <- shiny::renderUI({
     u <- user()
     if (is.null(u)) {
-      shiny::tags$a(href = orcid_authorize_url(orcid_state_new()),
-                    class = "btn btn-success btn-sm",
-                    "Sign in with ORCID")
+      shiny::tagList(
+        if (orcid_enabled()) {
+          shiny::tags$a(href = orcid_authorize_url(orcid_state_new()),
+                        class = "btn btn-success btn-sm",
+                        "Sign in with ORCID")
+        },
+        if (password_login_enabled()) {
+          shiny::actionButton("admin_login", "Admin sign-in",
+                              class = "btn-outline-secondary btn-sm ms-2")
+        }
+      )
     } else {
       shiny::tagList(
         shiny::HTML(orcid_link(u$orcid, u$full_name)),

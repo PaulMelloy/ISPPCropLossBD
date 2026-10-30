@@ -69,10 +69,9 @@ to that iD.
 | `ORCID_CLIENT_ID`, `ORCID_CLIENT_SECRET`, `ORCID_REDIRECT_URI`, `ORCID_ENV` | Leave | Placeholders; not used while `CROPLOSS_DEV_AUTH` is set. |
 | `CROPLOSS_STATE_SECRET` | Leave | Signs the ORCID login state; not used with the dev bypass. |
 
-For a real deployment, every `ORCID_*` value must be a real one from your
-ORCID developer account, `CROPLOSS_STATE_SECRET` must be a long random string
-(the command is in `dev/Renviron.example`), and `CROPLOSS_DEV_AUTH` must stay
-commented out.
+For a real deployment follow [`docs/DEPLOY.md`](docs/DEPLOY.md). It signs in
+with an admin password (`CROPLOSS_ADMIN_ORCID`, `CROPLOSS_ADMIN_PASSWORD`)
+until ORCID is registered, and `CROPLOSS_DEV_AUTH` cannot reach it.
 
 ### Start from scratch
 

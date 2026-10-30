@@ -53,10 +53,14 @@ services:
       CROPLOSS_DB_NAME: croploss
       CROPLOSS_DB_USER: croploss_app
       CROPLOSS_DB_PASSWORD: ${APP_PASSWORD}
-      ORCID_ENV: ${ORCID_ENV:-sandbox}
-      ORCID_CLIENT_ID: ${ORCID_CLIENT_ID:?Set ORCID_CLIENT_ID in deploy/.env}
-      ORCID_CLIENT_SECRET: ${ORCID_CLIENT_SECRET:?Set ORCID_CLIENT_SECRET in deploy/.env}
+      # Sign-in: ORCID once the client ID and secret are set, admin password
+      # while CROPLOSS_ADMIN_PASSWORD is set. Either or both may be on.
+      ORCID_ENV: ${ORCID_ENV:-production}
+      ORCID_CLIENT_ID: ${ORCID_CLIENT_ID:-}
+      ORCID_CLIENT_SECRET: ${ORCID_CLIENT_SECRET:-}
       ORCID_REDIRECT_URI: https://${CROPLOSS_DOMAIN:?Set CROPLOSS_DOMAIN in deploy/.env}/
+      CROPLOSS_ADMIN_ORCID: ${CROPLOSS_ADMIN_ORCID:-}
+      CROPLOSS_ADMIN_PASSWORD: ${CROPLOSS_ADMIN_PASSWORD:-}
       CROPLOSS_STATE_SECRET: ${CROPLOSS_STATE_SECRET:?Set CROPLOSS_STATE_SECRET in deploy/.env}
     # No published ports: Caddy reaches it on the internal network.
 

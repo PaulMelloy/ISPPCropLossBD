@@ -6,6 +6,7 @@
 #' @param ... Passed to [shiny::shinyApp()].
 #' @export
 run_app <- function(...) {
+  check_auth_config()
   pool <- db_pool()
   shiny::shinyApp(
     ui = app_ui,

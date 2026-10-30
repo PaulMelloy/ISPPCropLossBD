@@ -11,7 +11,7 @@ mod_entry_server <- function(id, pool, user, refresh, lookups) {
       refresh()   # re-render (clear form) after each successful submission
       if (is.null(user())) {
         return(bslib::card(bslib::card_body(
-          "Please sign in with ORCID to add observations."
+          "Please sign in to add observations."
         )))
       }
       bslib::card(
