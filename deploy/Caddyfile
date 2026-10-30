@@ -1,0 +1,6 @@
+# Caddy obtains and renews the HTTPS certificate automatically for
+# CROPLOSS_DOMAIN (set in deploy/.env). Ports 80 and 443 must reach this host.
+# WebSocket upgrades, which Shiny needs, are proxied without extra config.
+{$CROPLOSS_DOMAIN} {
+	reverse_proxy app:3838
+}

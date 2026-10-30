@@ -6,3 +6,4 @@
 
 # Project-local R library (see packages_dependancies.sh)
 r-lib/
+deploy/.env

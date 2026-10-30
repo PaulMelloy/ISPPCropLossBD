@@ -1,0 +1,81 @@
+# Production stack: Postgres + one-shot schema setup + Shiny app + Caddy (HTTPS).
+# Run from the repo root:
+#   docker compose -f deploy/docker-compose.yml up -d --build
+# Configuration comes from deploy/.env (see deploy/.env.example).
+name: croploss
+
+services:
+  db:
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: croploss
+      POSTGRES_USER: croploss_owner
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in deploy/.env}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    # No published ports: only other containers in this stack can reach it.
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U croploss_owner -d croploss"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  # Runs dev/setup_db.sh once (schema, audit trail, roles, seed data) and
+  # exits. Safe to run again: it does nothing if the schema already exists.
+  db-init:
+    image: postgres:16
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+    environment:
+      OWNER_URL: postgres://croploss_owner:${POSTGRES_PASSWORD}@db:5432/croploss
+      APP_PASSWORD: ${APP_PASSWORD:?Set APP_PASSWORD in deploy/.env}
+    volumes:
+      - ../dev/setup_db.sh:/work/dev/setup_db.sh:ro
+      - ../inst/sql:/work/inst/sql:ro
+    command: ["bash", "/work/dev/setup_db.sh"]
+
+  app:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      db-init:
+        condition: service_completed_successfully
+    # Variables are listed explicitly (no env_file) so CROPLOSS_DEV_AUTH can
+    # never reach the container, whatever is in deploy/.env.
+    environment:
+      CROPLOSS_DB_HOST: db
+      CROPLOSS_DB_PORT: "5432"
+      CROPLOSS_DB_NAME: croploss
+      CROPLOSS_DB_USER: croploss_app
+      CROPLOSS_DB_PASSWORD: ${APP_PASSWORD}
+      ORCID_ENV: ${ORCID_ENV:-sandbox}
+      ORCID_CLIENT_ID: ${ORCID_CLIENT_ID:?Set ORCID_CLIENT_ID in deploy/.env}
+      ORCID_CLIENT_SECRET: ${ORCID_CLIENT_SECRET:?Set ORCID_CLIENT_SECRET in deploy/.env}
+      ORCID_REDIRECT_URI: https://${CROPLOSS_DOMAIN:?Set CROPLOSS_DOMAIN in deploy/.env}/
+      CROPLOSS_STATE_SECRET: ${CROPLOSS_STATE_SECRET:?Set CROPLOSS_STATE_SECRET in deploy/.env}
+    # No published ports: Caddy reaches it on the internal network.
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - app
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      CROPLOSS_DOMAIN: ${CROPLOSS_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data      # certificates; keep this volume
+      - caddy_config:/config
+
+volumes:
+  pgdata:
+  caddy_data:
+  caddy_config:

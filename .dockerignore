@@ -1,0 +1,11 @@
+.git
+.Rproj.user
+.Rhistory
+.RData
+.Renviron*
+r-lib
+dev
+docs
+deploy
+tests
+*.Rproj

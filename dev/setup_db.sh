@@ -9,7 +9,7 @@ SQL_DIR="$(cd "$(dirname "$0")/../inst/sql" && pwd)"
 
 if [[ "$(psql "$OWNER_URL" -Atc "SELECT to_regclass('croploss.app_user') IS NOT NULL")" == "t" ]]; then
   echo "Database already set up (croploss.app_user exists); nothing to do." >&2
-  echo "To rebuild from scratch run: bash dev/reset_dev.sh" >&2
+  echo "To rebuild from scratch: dev/reset_dev.sh (development) or docs/DEPLOY.md (production)" >&2
   exit 0
 fi
 

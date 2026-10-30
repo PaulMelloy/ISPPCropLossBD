@@ -3,7 +3,12 @@
 Prototype Shiny application for the ISPP Crop Loss Subcommittee database.
 PostgreSQL back end, ORCID sign-in, and a full audit trail of every change.
 
-**Start here:** [`docs/BUILD_PROTOCOL.md`](docs/BUILD_PROTOCOL.md)
+**Production deployment (Docker):** [`docs/DEPLOY.md`](docs/DEPLOY.md)
+
+Background and design decisions: [`docs/BUILD_PROTOCOL.md`](docs/BUILD_PROTOCOL.md)
+(its deployment section predates the Docker setup; follow `DEPLOY.md` instead).
+
+The steps below are for local development.
 
 Quick start (local, development login):
 
